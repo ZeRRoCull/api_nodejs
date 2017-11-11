@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/ZeRRoCull/api_nodejs/issues"
   },
-  "homepage": "https://github.com/ZeRRoCull/api_nodejs#readme"
+  "homepage": "https://github.com/ZeRRoCull/api_nodejs#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
 }
