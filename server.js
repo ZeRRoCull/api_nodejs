@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
+const ObjectID = require('mongodb').ObjectID;
 
 let app = express();
 let db;
@@ -32,7 +33,13 @@ app.get('/',function (req, res) {
 });
 
 app.route('/artists').get(function (req, res) {
-        res.send(artists);
+        db.collection('artists').find().toArray(function (err, result) {
+            if (err) {
+                console.log(err);
+                return res.sendStatus(500);
+            }
+            res.send(result);
+        });
     }).post(function(req, res) {
         let artist = {
             name: req.body.name
@@ -40,18 +47,19 @@ app.route('/artists').get(function (req, res) {
         db.collection('artists').insert(artist,function (err, result) {
             if (err) {
                 console.log(err);
-                res.sendStatus(500);
+                return res.sendStatus(500);
             }
             res.send(artist);
         });
     });
 
 app.route('/artists/:id').get(function (req, res) {
-        const id = Number(req.params.id);
-        artists.forEach(function(artist) {
-            if (artist.id == id) {
-                res.send(artist);
+        db.collection('artists').findOne({_id:ObjectID(req.params.id)},function (err, artist) {
+            if (err) {
+                console.log(err);
+                return res.sendStatus(500);
             }
+            res.send(artist);
         });
     }).put(function(req,res){
         let artist = artists.find(function(artist) {
