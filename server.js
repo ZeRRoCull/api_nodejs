@@ -35,11 +35,15 @@ app.route('/artists').get(function (req, res) {
         res.send(artists);
     }).post(function(req, res) {
         let artist = {
-            id: Date.now(),
             name: req.body.name
         };
-        artists.push(artist);
-        res.send(artist);
+        db.collection('artists').insert(artist,function (err, result) {
+            if (err) {
+                console.log(err);
+                res.sendStatus(500);
+            }
+            res.send(artist);
+        });
     });
 
 app.route('/artists/:id').get(function (req, res) {
