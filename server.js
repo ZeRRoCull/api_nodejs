@@ -62,11 +62,17 @@ app.route('/artists/:id').get(function (req, res) {
             res.send(artist);
         });
     }).put(function(req,res){
-        let artist = artists.find(function(artist) {
-            return artist.id == Number(req.params.id);
+        db.collection('artists').updateOne({
+            _id: ObjectID(req.params.id),
+        },{
+            name: req.body.name
+        },function (err, result) {
+            if (err) {
+                console.log(err);
+                res.sendStatus(500);
+            }
+            res.send(200);
         });
-        artist.name = req.body.name;
-        res.sendStatus(200);
     }).delete(function (req, res) {
         const id = Number(req.params.id);
         artists = artists.filter(function (artist) {
