@@ -1,8 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
 const db = require('./db');
+const artistsController = require('./controllers/artists.controller');
 
 let app = express();
 
@@ -14,26 +14,7 @@ app.get('/',function (req, res) {
     res.send('Hello API');
 });
 
-app.route('/artists').get(function (req, res) {
-        db.get().collection('artists').find().toArray(function (err, result) {
-            if (err) {
-                console.log(err);
-                return res.sendStatus(500);
-            }
-            res.send(result);
-        });
-    }).post(function(req, res) {
-        let artist = {
-            name: req.body.name
-        };
-        db.get().collection('artists').insert(artist,function (err, result) {
-            if (err) {
-                console.log(err);
-                return res.sendStatus(500);
-            }
-            res.send(artist);
-        });
-    });
+app.route('/artists').get(artistsController.all).post(artistsController.insert);
 
 app.route('/artists/:id').get(function (req, res) {
         db.get().collection('artists').findOne({_id:ObjectID(req.params.id)},function (err, artist) {
